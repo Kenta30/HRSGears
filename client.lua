@@ -113,11 +113,13 @@ end
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0) 
+	local sleep = 500
         if manualon == true and vehicle ~= nil then
-        DisableControlAction(0, 80, true)
-        DisableControlAction(0, 21, true)
+		sleep = 0
+                DisableControlAction(0, 80, true)
+                DisableControlAction(0, 21, true)
         end
+	Wait(sleep)
     end
 
 end)
@@ -125,12 +127,12 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0) 
+        local sleep = 300
         
         if manualon == true and vehicle ~= nil then
 
             if vehicle ~= nil then
-
+            sleep = 0
 
             
             -- Shift up and down
@@ -157,7 +159,7 @@ Citizen.CreateThread(function()
             end
 
         end
-
+       Wait(sleep)
     end
 end)
 
@@ -258,12 +260,6 @@ Citizen.CreateThread(function()
         end
     end
 end)
-
-
-
-
-
-
 
 local disable = false
     
