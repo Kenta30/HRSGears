@@ -31,10 +31,10 @@ Config.vehicles = {
     --     [5] = {3.33, 1.92, 1.36, 1.05, 0.90},--5
     --     [6] = {3.33, 1.95, 1.39, 1.09, 0.95, 0.90},--6
     -- },
-    -- [GetHashKey('m3e36')] = {
+    [joaat('e34')] = {
     --     [6] = {4.585, 2.72, 1.81, 1.333, 1.084, 0.90},--6 m3e36 trans
     --     [7] = {4.00, 2.34, 1.67, 1.31, 1.14, 1.08, 0.90},--7
-    -- },
+    },
     -- [GetHashKey('nero')] = {
 
     --     [7] = {4.205, 2.523364, 1.892523, 1.4509, 1.17757, 0.988, 0.90},--7
@@ -54,5 +54,5 @@ Config.vehicles = {
 Config.enginebrake = true -- brakes the car if you downshift the wrong way
 
 
-Config.gearhud = 2 -- if 1 - show gear / if 2 show gear and km/h and Rpm from 0 to 1 / if 0 disable hud
+Config.gearhud = 0 -- if 1 - show gear / if 2 show gear and km/h and Rpm from 0 to 1 / if 0 disable hud
 
