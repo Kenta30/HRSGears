@@ -1,5 +1,6 @@
 fx_version 'adamant'
 games {'gta5'}
+lua54 'yes'
 
 author 'Hugo Rafael Simoes'
 description 'CaixaManual'
