@@ -1,6 +1,3 @@
-
-
-
 local vehicle = nil
 local numgears = nil
 local topspeedGTA = nil
@@ -9,6 +6,7 @@ local acc = nil
 local hash = nil
 local selectedgear = 0 
 local hbrake = nil
+local dragcoeff = nil
 
 local manualon = false
 
@@ -22,6 +20,15 @@ RegisterCommand("manual", function()
     if vehicle == nil then
         if manualon == false then
             manualon = true
+            x()
+            xx()
+            --xxx()
+            xxxx()
+            xxxxx()
+            xxxxxx()
+            xxxxxxx()
+            xxxxxxxx()
+            xxxxxxxxx()
 			--TriggerEvent('chatMessage', '', {255, 255, 255}, '^7' .. 'Manual Mode ON' .. '^7.')
         else
             manualon = false
@@ -31,7 +38,7 @@ RegisterCommand("manual", function()
 end)
 
 RegisterCommand("manualmode", function()
-    if vehicle == nil then
+    --if vehicle == nil then
         if manualon == false then
         
         else
@@ -40,14 +47,37 @@ RegisterCommand("manualmode", function()
 				--TriggerEvent('chatMessage', '', {255, 255, 255}, '^7' .. 'Manual Mode SIMPLE' .. '^7.')
             else
                 realistic = true
+                kenta()
 				--TriggerEvent('chatMessage', '', {255, 255, 255}, '^7' .. 'Manual Mode REALISTIC' .. '^7.')
             end
         end
-    end
+    --end
 end)
 
+function kenta()
+CreateThread(function()
+    while realistic do
+       Wait(1500)
+       if IsPedInAnyVehicle(PlayerPedId(), false) then
+          local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+          local vehicleSpeedSource = GetEntitySpeed(vehicle)
+          local speed = math.ceil(vehicleSpeedSource * 3.6)
+          local rpm = ESX.Math.Round(GetVehicleCurrentRpm(vehicle), 2)
+          local gear = getinfo2(selectedgear)
+          if speed > 1 then
+             if rpm < 0.61 and gear > 1 then
+                selectedgear = selectedgear - 1
+                SimulateGears()
+             end
+          end
+       end
+    end
+end)
+end
+
+function x()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
         Citizen.Wait(100) 
 
         local ped = PlayerPedId()
@@ -59,7 +89,7 @@ Citizen.CreateThread(function()
         elseif newveh == 0 and vehicle ~= nil then
             resetvehicle()
         else
-            if GetPedInVehicleSeat(newveh,-1) == ped then
+            if GetPedInVehicleSeat(newveh, -1) == ped then
                 if class ~= 13 and class ~= 14 and class ~= 15 and class ~= 16 and class ~= 21 then
                     vehicle = newveh
                     hash = GetEntityModel(newveh)
@@ -89,6 +119,7 @@ Citizen.CreateThread(function()
 
     end
 end)
+end
 
 function resetvehicle()
     SetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDriveForce", acc)
@@ -111,22 +142,71 @@ function resetvehicle()
     ready = false
 end
 
+function xx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
 	local sleep = 500
         if manualon == true and vehicle ~= nil then
 		sleep = 0
-                DisableControlAction(0, 80, true)
-                DisableControlAction(0, 21, true)
+                DisableControlAction(0, 137, true)
+                DisableControlAction(0, 224, true)
         end
 	Wait(sleep)
     end
+end)
+end
 
+local fasz = true
+
+ESX.RegisterInput("fgear", "Felváltás", "keyboard", "CAPITAL", function()
+if fasz == true then
+fasz = false
+if manualon == true and vehicle ~= nil then
+if vehicle ~= nil then
+if ready == true then
+if selectedgear <= numgears - 1 then 
+Wait(200)
+selectedgear = selectedgear + 1
+SimulateGears()
+Wait(200)
+fasz = true
+end
+Wait(200)
+end
+Wait(200)
+end
+Wait(200)
+end
+Wait(200)
+end
+Wait(200)
+fasz = true
 end)
 
+ESX.RegisterInput("rgear", "Lelváltás", "keyboard", "LCONTROL", function()
+if fasz == true then
+fasz = false
+if manualon == true and vehicle ~= nil then
+if vehicle ~= nil then
+if ready == true then
+if selectedgear > -1 then
+Wait(200)
+selectedgear = selectedgear - 1
+SimulateGears()
+Wait(200)
+fasz = true
+end
+end
+end
+end
+end
+Wait(200)
+fasz = true
+end)
 
+function xxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
         local sleep = 300
         
         if manualon == true and vehicle ~= nil then
@@ -137,19 +217,19 @@ Citizen.CreateThread(function()
             
             -- Shift up and down
                 if ready == true then
-                    if IsDisabledControlJustPressed(0, 21) then
+                    if IsDisabledControlJustPressed(0, 137) then
                         if selectedgear <= numgears - 1 then 
                             DisableControlAction(0, 71, true)
-                            Wait(300)
+                            Wait(200)
                             selectedgear = selectedgear + 1
                             DisableControlAction(0, 71, false)
                             SimulateGears()
                         end
-                    elseif IsDisabledControlJustPressed(0, 80) then
+                    elseif IsDisabledControlJustPressed(0, 224) then
                         if selectedgear > -1 then
                            
                             DisableControlAction(0, 71, true)
-                            Wait(300)
+                            Wait(200)
                             selectedgear = selectedgear - 1
                             DisableControlAction(0, 71, false)
                             SimulateGears()
@@ -162,39 +242,37 @@ Citizen.CreateThread(function()
        Wait(sleep)
     end
 end)
-
-
+end
 
 function SimulateGears()
-
-    local engineup = GetVehicleMod(vehicle,11)      
+   --if fasz == false then
+    local engineup = GetVehicleMod(vehicle, 11)      
 
     if selectedgear > 0 then
         
         local ratio 
-        if Config.vehicles[hash] ~= nil then
-            if selectedgear ~= 0 and selectedgear ~= nil  then
-                if numgears ~= nil and selectedgear ~= nil then
+    --[[if Config.vehicles[hash] ~= nil then
+        if selectedgear ~= 0 and selectedgear ~= nil  then
+            if numgears ~= nil and selectedgear ~= nil then
+                if Config.vehicles[hash][numgears] ~= nil then
                     ratio = Config.vehicles[hash][numgears][selectedgear] * (1/0.9)
                 else
-		    ratio = Config.gears[numgears][selectedgear] * (1/0.9)
-                end
-            end
-        
-        else
-            if selectedgear ~= 0 and selectedgear ~= nil then
-                if numgears ~= nil and selectedgear ~= nil then
                     ratio = Config.gears[numgears][selectedgear] * (1/0.9)
-                else
-                
                 end
-            
             end
         end
+    
+    else]]
+        if selectedgear ~= 0 and selectedgear ~= nil then
+            if numgears ~= nil and selectedgear ~= nil then
+                ratio = Config.gears[numgears][selectedgear] * (1/0.9)
+            end
+        end
+    --end
 
         if ratio ~= nil then
     
-            SetVehicleHighGear(vehicle,1)
+            SetVehicleHighGear(vehicle, 1)
             newacc = ratio * acc
             newtopspeedGTA = topspeedGTA / ratio
             newtopspeedms = topspeedms / ratio
@@ -231,12 +309,13 @@ function SimulateGears()
         --end
     
     end
-SetVehicleMod(vehicle,11,engineup,false)
-	
+    SetVehicleMod(vehicle, 11, engineup, false)
+   --end
 end
 
+function xxxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
         Citizen.Wait(0)
         if manualon == true and vehicle ~= nil then
             if selectedgear == -1 then
@@ -260,11 +339,13 @@ Citizen.CreateThread(function()
         end
     end
 end)
+end
 
 local disable = false
-    
+
+function xxxxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
         Citizen.Wait(0)
         if realistic == true then
             if manualon == true and vehicle ~= nil then
@@ -288,15 +369,13 @@ Citizen.CreateThread(function()
         end
     end
 end)
+end
 
-
-
-
-
+function xxxxxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
             
-        Citizen.Wait(0)
+        Citizen.Wait(500)
         if disable == true then
             SetVehicleEngineOn(vehicle,false,true,false)
             Citizen.Wait(1000)
@@ -306,9 +385,11 @@ Citizen.CreateThread(function()
 
     end
 end)
+end
 
+function xxxxxxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
             
         Citizen.Wait(0)
         if vehicle ~= nil and selectedgear ~= 0 then 
@@ -372,41 +453,26 @@ Citizen.CreateThread(function()
                     --else
                         --SetVehicleHandbrake(vehicle, true)
                         --SetVehicleHandlingFloat(vehicle, "CHandlingData", "fHandBrakeForce", hbrake)
-                    --end 
-    
+                    --end
                 end
-
-
             end
-        
-
-            
-        
-        
         end
-
     end
 end)
-
-
-
-
+end
 
 ---------------debug
 
-Citizen.CreateThread(function()
-
-    Citizen.Wait(100)
-
-if Config.gearhud == 1 then
+function xxxxxxxxx()
+    if Config.gearhud == 1 then
     Citizen.CreateThread(function()
-        while true do
+        while manualon do
             Citizen.Wait(0)
             if manualon == true and vehicle ~= nil then
     
             SetTextFont(0)
             SetTextProportional(1)
-            SetTextScale(0.0, 0.3)
+            SetTextScale(0.0, 0.4)
             SetTextColour(128, 128, 128, 255)
             SetTextDropshadow(0, 0, 0, 0, 255)
             SetTextEdge(1, 0, 0, 0, 255)
@@ -414,15 +480,17 @@ if Config.gearhud == 1 then
             SetTextOutline()
             SetTextEntry("STRING")
         
-            AddTextComponentString("~r~Gear: ~w~"..getinfo(selectedgear))
+            AddTextComponentString("~r~Sebességfokozat: ~w~"..getinfo(selectedgear))
         
-            DrawText(0.015, 0.78)
+            EndTextCommandDisplayText(0.015, 0.78)
             else
                 Citizen.Wait(100)
             end
         end
     end)
-elseif Config.gearhud == 2 then  
+    end
+end
+--[[elseif Config.gearhud == 2 then  
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(0)
@@ -440,20 +508,18 @@ elseif Config.gearhud == 2 then
         
             AddTextComponentString("~r~Gear: ~w~"..getinfo(selectedgear).." ~r~Km/h: ~w~"..round((GetEntitySpeed(vehicle)*3.6),0).." ~r~RPM: ~w~"..round(GetVehicleCurrentRpm(vehicle),2))
         
-            DrawText(0.015, 0.78)
+            EndTextCommandDisplayText(0.015, 0.78)
             else
                 Citizen.Wait(100)
             end
         end
     end)
 end
+end)]]
 
-end)
-
-
-
-
-
+function getinfo2(gea)
+        return gea
+end
 
 function getinfo(gea)
     if gea == 0 then
@@ -474,10 +540,9 @@ function round(value, numDecimalPlaces)
 	end
 end
 
-
-
+function xxxxxxxx()
 Citizen.CreateThread(function()
-    while true do
+    while manualon do
         Citizen.Wait(0)
         --if manualon == true and vehicle ~= nil then
     
@@ -494,15 +559,15 @@ Citizen.CreateThread(function()
         SetTextEntry("STRING")
         if manualon == true then
             if realistic == false then
-                AddTextComponentString("~r~HRSGears: ~g~On ~r~Mode: ~g~Arcade")
-            else
                 AddTextComponentString("~r~HRSGears: ~g~On ~r~Mode: ~g~Realistic")
+            else
+                AddTextComponentString("~r~HRSGears: ~g~On ~r~Mode: ~g~Realistic comfort")
             end
         else
             AddTextComponentString("~r~HRSGears: ~w~Off")
         end
         
-        DrawText(0.95, 0.005)
-
+        EndTextCommandDisplayText(0.95, 0.005)
     end
 end)
+end
